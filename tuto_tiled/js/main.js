@@ -34,7 +34,7 @@ var catDeath;
 var music;
 
 var trapLayer;
-var speed, slow, fear, fly;
+var speed, slow, fear, fly, shake;
 function preload() {
     // map made with Tiled in JSON format
     this.load.tilemapTiledJSON('map', 'assets/map.json');
@@ -56,6 +56,11 @@ function preload() {
     this.load.image('cucumber', 'assets/cucumber.png');
 
     this.load.image('bird', 'assets/bird.png')
+
+    this.load.image('trampoline', 'assets/trampoline.png')
+
+    this.load.image('spikeTrap', 'assets/spikeTrap.png');
+
     // player animations
     this.load.atlas('player', 'assets/player.png', 'assets/player.json');
 
@@ -79,7 +84,7 @@ function preload() {
 
     this.load.audio('flute', 'assets/flute.mp3')
 
-    this.load.image('spikeTrap', 'assets/spikeTrap.png');
+    this.load.audio('twang', 'assets/twang.mp3')
     
 }   
 function create() {
@@ -94,6 +99,7 @@ function create() {
     groundLayer = map.createDynamicLayer('World', groundTiles, 0, 0);
     platformLayer = map.createDynamicLayer ('Plateformes', platformTiles, 0, 0);
     seaLayer = map.createDynamicLayer ('Sea', seaTiles, 0, 0);
+
     // the player will collide with this layer
     groundLayer.setCollisionByExclusion([-1]);
     platformLayer.setCollisionByExclusion([-1]);
@@ -114,10 +120,10 @@ function create() {
     
     // small fix to our player images, we resize the physics body object slightly
     player.body.setSize(player.width, player.height-8);
-    
     // player will collide with the level tiles 
     this.physics.add.collider(groundLayer, player);
     this.physics.add.collider(platformLayer, player);
+
  
     coinLayer.setTileIndexCallback(17, collectCoin, this);
     // when the player overlaps with a tile with index 17, collectCoin 
@@ -156,6 +162,12 @@ function create() {
 
     birdLayer.setTileIndexCallback(37, collectBird, this);
     this.physics.add.overlap(player, birdLayer);
+    //
+    var trampTiles = map.addTilesetImage('trampoline');
+    trampLayer = map.createDynamicLayer('Tramp', trampTiles, 0, 0);
+
+    trampLayer.setTileIndexCallback(38, TrampoJump, this);
+    this.physics.add.overlap(player, trampLayer);
     // fin bonus
  
     // player walk animation
@@ -200,9 +212,12 @@ function create() {
     scream  =this.sound.add('scream', {volume: 0.4})
     vomit  =this.sound.add('vomit', {volume: 1})
     flute  =this.sound.add('flute', {volume: 0.2})
+    twang  =this.sound.add('twang', {volume: 1})
     music.play();
 }
 function update(time, delta){
+
+
         if (cursors.left.isDown && fear == true){
             player.body.setVelocityX(0); // move left
             player.anims.play('idle', true)
@@ -345,3 +360,8 @@ function killPlayer (sprite, tile) {
     knife.play()
     catDeath.play()
 }
+function TrampoJump(sprite, tile){
+    player.body.setVelocityY(-1000);  
+    twang.play()
+}
+
