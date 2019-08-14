@@ -46,7 +46,7 @@ function preload() {
     this.load.spritesheet('sea', 'assets/sea.png', {frameWidth: 70, frameHeight: 70});
 
 
-    // simple bonus image
+    //image
     this.load.image('coin', 'assets/coinGold.png');
 
     this.load.image('fish', 'assets/fish.png');
@@ -61,9 +61,12 @@ function preload() {
 
     this.load.image('spikeTrap', 'assets/spikeTrap.png');
 
+    this.load.image('moving', 'assets/moving.png');
+
     // player animations
     this.load.atlas('player', 'assets/player.png', 'assets/player.json');
 
+    // audio
     this.load.audio('jump', 'assets/frog_jump.mp3')
 
     this.load.audio('gold', 'assets/gold.mp3')
@@ -138,37 +141,47 @@ function create() {
     this.physics.add.overlap(player, trapLayer);
     // fin spike
 
-    // bonus
+    //moving platform
+
+
+    // BONUS
+
+    // poisson
     var fishTiles = map.addTilesetImage('fish');
     fishLayer = map.createDynamicLayer('Fish', fishTiles, 0, 0);
 
     fishLayer.setTileIndexCallback(34, collectFish, this);
     this.physics.add.overlap(player, fishLayer);
-    //
+    
+    //choco
     var chocoTiles = map.addTilesetImage('choco');
     chocoLayer = map.createDynamicLayer('Choco', chocoTiles, 0, 0);
 
     chocoLayer.setTileIndexCallback(35, collectChoco, this);
     this.physics.add.overlap(player, chocoLayer);
-    //
+
+    //Concombre
     var cucumTiles = map.addTilesetImage('cucumber');
     cucumLayer = map.createDynamicLayer('Cucumber', cucumTiles, 0, 0);
 
     cucumLayer.setTileIndexCallback(36, collectCucum, this);
     this.physics.add.overlap(player, cucumLayer);
-    //
+
+    //oiseau
     var birdTiles = map.addTilesetImage('bird');
     birdLayer = map.createDynamicLayer('Bird', birdTiles, 0, 0);
 
     birdLayer.setTileIndexCallback(37, collectBird, this);
     this.physics.add.overlap(player, birdLayer);
-    //
+
+    //Trampoline
     var trampTiles = map.addTilesetImage('trampoline');
     trampLayer = map.createDynamicLayer('Tramp', trampTiles, 0, 0);
 
     trampLayer.setTileIndexCallback(38, TrampoJump, this);
     this.physics.add.overlap(player, trampLayer);
-    // fin bonus
+
+    // fin des BONUS
  
     // player walk animation
     this.anims.create({
@@ -201,7 +214,7 @@ function create() {
     })
     text.setScrollFactor(0);
 
-
+    // variables des sons et musiques
     jump = this.sound.add('jump', {volume: 0.5});
     goldAudio = this.sound.add('gold', {volume: 0.3});
     meow = this.sound.add('meow', {volume:0.2});
@@ -303,6 +316,8 @@ function update(time, delta){
 
 
     }
+
+    //function des BONUS
 function collectCoin(sprite, tile){
     coinLayer.removeTileAt(tile.x, tile.y);
     score++;
